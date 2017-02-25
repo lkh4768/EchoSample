@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <client timeout="1000">
+        <server ip="127.0.0.1" port="6666"/>
+    </client>
+</configuration>

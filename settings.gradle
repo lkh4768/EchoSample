@@ -1,0 +1,4 @@
+rootProject.name = 'echo'
+include 'server'
+include 'client'
+
