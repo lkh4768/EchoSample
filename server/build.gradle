@@ -4,4 +4,10 @@ jar {
                 'Main-Class': 'xyz.swwarehouse.echoserver.Main'
         )
     }
+
+    /*
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } with jar
+    */
 }

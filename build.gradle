@@ -13,7 +13,13 @@ subprojects {
         compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: 'latest.release'
         compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: 'latest.release'
         compile group: 'commons-beanutils', name: 'commons-beanutils', version: 'latest.release'
-        compile group: 'commons-collections', name: 'commons-collections', version: 'latest:release'
+
         testCompile group: 'junit', name: 'junit', version: 'latest.release'
+    }
+
+    jar{
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
     }
 }
