@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -40,21 +39,18 @@ public class Server {
     }
 
     public void run() {
-        try {
-            accept();
-            while (true) {
-                String str = recv();
-                if (str.isEmpty()) {
-                    logger.warn("Recv Data Empty");
-                    break;
+        while (true) {
+            try {
+                accept();
+                while (true) {
+                    send(recv());
                 }
-                send(str);
+            } catch (IOException e) {
+                logger.error(e.toString());
+                e.printStackTrace();
+            } finally {
+                closeClient();
             }
-        } catch (IOException e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-        } finally {
-            closeAll();
         }
     }
 

@@ -26,9 +26,9 @@ public enum Config {
             XMLConfiguration config = builder.getConfiguration();
             port = config.getInt("server[@port]", 10000);
             timeout = config.getInt("server[@timeout]", 10);
-
             logger.debug(toString());
         } catch (ConfigurationException e) {
+            logger.error(e.toString());
             e.printStackTrace();
         }
     }
