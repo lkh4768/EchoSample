@@ -3,12 +3,8 @@ package xyz.swwarehouse.echoserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 /**
  * Created by WES on 2017-02-19.
@@ -16,16 +12,14 @@ import java.net.Socket;
 public class Server {
     private static final Logger logger = LogManager.getLogger(Server.class);
     private int port = 9000;
-    private BufferedReader in = null;
-    private PrintWriter out = null;
     private ServerSocket listener = null;
-    private Socket socket = null;
+    private Session session = null;
 
     public Server() {
         init();
     }
 
-    public Server(int port) {
+    public Server(final int port) {
         this.port = port;
         init();
     }
@@ -46,30 +40,27 @@ public class Server {
                     send(recv());
                 }
             } catch (IOException e) {
-                logger.error(e.toString());
-                e.printStackTrace();
+                logger.error("Session(" + session.getAddr() + "), " + e.getMessage());
             } finally {
-                closeClient();
+                session.close();
             }
         }
     }
 
     private void accept() throws IOException {
-        socket = listener.accept();
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
-        logger.info("Accpet Client IP(" + socket.getInetAddress() + "), Port(" + socket.getPort() + ")");
+        session = new Session(listener.accept());
+        logger.info("Accpeted Client(" + session.getAddr() + ")");
     }
 
     private String recv() throws IOException {
-        String str = in.readLine();
-        logger.info("Server <- Client, Input(" + str + ")");
+        String str = session.read();
+        logger.info("Server <- Client(" + session.getAddr() + "), Input(" + str + ")");
         return str;
     }
 
-    private void send(String str) {
-        out.println(str);
-        logger.info("Server -> Client, output(" + str + ")");
+    private void send(final String str) {
+        session.write(str);
+        logger.info("Server -> Client(" + session.getAddr() + "), output(" + str + ")");
     }
 
     private void closeAll() {
@@ -78,20 +69,21 @@ public class Server {
     }
 
     private void closeClient() {
-        try {
-            if (socket != null)
-                socket.close();
-        } catch (IOException e) {
-            logger.error(e.toString());
+        if (session != null) {
+            session.close();
+            session = null;
         }
     }
 
     private void closeServer() {
         try {
-            if (listener != null)
+            if (listener != null) {
                 listener.close();
+                listener = null;
+            }
         } catch (IOException e) {
             logger.error(e.toString());
         }
     }
+
 }
