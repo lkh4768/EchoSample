@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Created by WES on 2017-05-28.
@@ -19,6 +20,7 @@ public class Session {
     private Socket socket = null;
     private BufferedReader in = null;
     private PrintWriter out = null;
+    private int timeout = 0;
 
     public Session(Socket socket) {
         this.socket = socket;
@@ -39,6 +41,12 @@ public class Session {
             logger.error(e.toString());
             close();
         }
+    }
+
+    public void setTimeout(int time)  throws SocketException
+    {
+        this.timeout = time;
+        socket.setSoTimeout(time);
     }
 
     public String getAddr() {

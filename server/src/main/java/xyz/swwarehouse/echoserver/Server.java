@@ -42,6 +42,7 @@ public class Server {
             } catch (IOException e) {
                 logger.error("Session(" + session.getAddr() + "), " + e.getMessage());
             } finally {
+                logger.info("Session(" + session.getAddr() + "), closed");
                 session.close();
             }
         }
@@ -49,6 +50,7 @@ public class Server {
 
     private void accept() throws IOException {
         session = new Session(listener.accept());
+        session.setTimeout(Config.INSTANCE.getTimeout());
         logger.info("Accpeted Client(" + session.getAddr() + ")");
     }
 

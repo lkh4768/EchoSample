@@ -39,9 +39,8 @@ public class Client {
                 send(str);
                 recv();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
-        } finally {
         }
     }
 
@@ -52,8 +51,8 @@ public class Client {
     private void connect() throws IOException {
         socket.connect(serverAddress, Config.INSTANCE.getTimeout());
         logger.info("Connected Server IP(" + socket.getInetAddress() + ":" + socket.getPort() + ")");
-        setInputOutput();
         socket.setSoTimeout(Config.INSTANCE.getTimeout());
+        setInputOutput();
     }
 
     private void setInputOutput() {
